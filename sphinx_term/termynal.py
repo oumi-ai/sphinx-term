@@ -7,8 +7,8 @@ Implements the `termynal` directive for Jupyter Book and Sphinx.
 
 import os
 import sys
-import yaml
 
+import yaml
 from docutils import nodes
 from docutils.parsers.rst import Directive, directives
 
@@ -18,32 +18,32 @@ DEPENDENCIES = {  # See sphinx_term/_static/README.md for more info
 }
 STYLES = {
     # FiraMono font: https://fonts.google.com/specimen/Fira+Mono
-    'firamono.css': 'https://fonts.googleapis.com/css?family=Fira+Mono'
+    "firamono.css": "https://fonts.googleapis.com/css?family=Fira+Mono"
 }
 
-STATIC_CSS_FILES = ['termynal/termynal.css']
-STATIC_JS_FILES = ['termynal/termynal.js']
+STATIC_CSS_FILES = ["termynal/termynal.css"]
+STATIC_JS_FILES = ["termynal/termynal.js"]
 STATIC_FILES = STATIC_CSS_FILES + STATIC_JS_FILES
 
-REFNAME = 'terminal box'
+REFNAME = "terminal box"
 
 TERMYNAL_ATTRS = [
-    'prefix',
-    'startDelay',
-    'typeDelay',
-    'lineDelay',
-    'progressLength',
-    'progressChar',
-    'cursor',
-    'noInit',
-    'lineData'
+    "prefix",
+    "startDelay",
+    "typeDelay",
+    "lineDelay",
+    "progressLength",
+    "progressChar",
+    "cursor",
+    "noInit",
+    "lineData",
 ]
 TERMYNAL_LINE_ATTRS = [
-    'prompt',
-    'progressPercent',
-    'progressChar',
-    'typeDelay',
-    'cursor'
+    "prompt",
+    "progressPercent",
+    "progressChar",
+    "typeDelay",
+    "cursor",
 ]
 
 if sys.version_info >= (3, 0):
@@ -59,20 +59,20 @@ class termynal_box(nodes.literal_block, nodes.Element):
 
 def visit_termynal_box_node(self, node):
     """Builds an opening HTML tag for termynal boxes."""
-    attributes = {'data-termynal': ''}
+    attributes = {"data-termynal": ""}
 
     for i in TERMYNAL_ATTRS:
-        attr = 'data-ty-{}'.format(i.lower())
+        attr = "data-ty-{}".format(i.lower())
         attr_text = node.attributes.get(attr, None)
         if attr_text is not None:
             attributes[attr] = attr_text
 
-    self.body.append(self.starttag(node, 'div', **attributes))
+    self.body.append(self.starttag(node, "div", **attributes))
 
 
 def depart_termynal_box_node(self, node):
     """Builds a closing HTML tag for termynal boxes."""
-    self.body.append('\n</div>\n')
+    self.body.append("\n</div>\n")
 
 
 def visit_termynal_box_node_(self, node):
@@ -81,7 +81,7 @@ def visit_termynal_box_node_(self, node):
 
 
 def depart_termynal_box_node_(self, node):
-    """Builds a postfix for embedding termynal boxes in LaTeX and raw text. """
+    """Builds a postfix for embedding termynal boxes in LaTeX and raw text."""
     raise NotImplemented
 
 
@@ -91,21 +91,21 @@ class termynal_line(nodes.literal_block, nodes.Element):
 
 def visit_termynal_line_node(self, node):
     """Builds an opening HTML tag for termynal lines."""
-    attributes = {'data-ty': node.attributes.get('type', '')}
+    attributes = {"data-ty": node.attributes.get("type", "")}
 
     for i in TERMYNAL_LINE_ATTRS:
         i_low = i.lower()
-        attr = 'data-ty-{}'.format(i_low)
+        attr = "data-ty-{}".format(i_low)
         attr_text = node.attributes.get(i_low, None)
         if attr_text is not None:
             attributes[attr] = attr_text
 
-    self.body.append(self.starttag(node, 'span', suffix='', **attributes))
+    self.body.append(self.starttag(node, "span", suffix="", **attributes))
 
 
 def depart_termynal_line_node(self, node):
     """Builds a closing HTML tag for termynal lines."""
-    self.body.append('</span>\n')
+    self.body.append("</span>\n")
 
 
 def visit_termynal_line_node_(self, node):
@@ -114,7 +114,7 @@ def visit_termynal_line_node_(self, node):
 
 
 def depart_termynal_line_node_(self, node):
-    """Builds a postfix for embedding termynal lines in LaTeX and raw text. """
+    """Builds a postfix for embedding termynal lines in LaTeX and raw text."""
     raise NotImplemented
 
 
@@ -179,6 +179,7 @@ class Termynal(Directive):
     .. _`termynal HTML configuration`: https://github.com/ines/termynal#customising-termynal
     .. _`termynal HTML line configuration`: https://github.com/ines/termynal#prompts-and-animations for description
     """
+
     required_arguments = 1
     optional_arguments = 0
     final_argument_whitespace = False
@@ -189,8 +190,8 @@ class Termynal(Directive):
         """Builds a termynal box."""
         env = self.state.document.settings.env
         options = self.options
-        data_ty = 'data-ty-{}'
-        data_ty_error = 'The *{}* parameter should be a {}.'
+        data_ty = "data-ty-{}"
+        data_ty_error = "The *{}* parameter should be a {}."
 
         # retrieve the path to the directory holding the code files
         st_term_dir = env.config.sphinx_term_termynal_dir
@@ -198,119 +199,124 @@ class Termynal(Directive):
 
         # get the terminal file name for this particular termynal box
         assert len(self.arguments) == 1, (
-            'Just one argument -- terminal block id (possibly encoding the '
-            'code file name -- expected')
+            "Just one argument -- terminal block id (possibly encoding the "
+            "code file name -- expected"
+        )
         term_filename_id = self.arguments[0]
-        assert term_filename_id.startswith('termynal:'), (
+        assert term_filename_id.startswith("termynal:"), (
             'The terminal box label ({}) must start with the "termynal:" '
-            'prefix.'.format(term_filename_id))
-        assert not term_filename_id.endswith('.yml'), (
+            "prefix.".format(term_filename_id)
+        )
+        assert not term_filename_id.endswith(".yml"), (
             'The terminal box label ({}) must not end with the ".yml" '
-            'extension prefix.'.format(term_filename_id))
+            "extension prefix.".format(term_filename_id)
+        )
         # add the .yml extension as it is missing
-        term_filename = '{}.yml'.format(term_filename_id[9:])
+        term_filename = "{}.yml".format(term_filename_id[9:])
 
         # collect termynal attributes
         attributes = {}
 
         # prefix
-        attr = 'prefix'
+        attr = "prefix"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str):
-                raise ValueError(data_ty_error.format(attr, 'string'))
+                raise ValueError(data_ty_error.format(attr, "string"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # startDelay
-        attr = 'startDelay'
+        attr = "startDelay"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str) or not attr_text.isdigit():
-                raise ValueError(data_ty_error.format(
-                    attr, 'non-negative integer'))
+                raise ValueError(data_ty_error.format(attr, "non-negative integer"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # typeDelay
-        attr = 'typeDelay'
+        attr = "typeDelay"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str) or not attr_text.isdigit():
-                raise ValueError(data_ty_error.format(
-                    attr, 'non-negative integer'))
+                raise ValueError(data_ty_error.format(attr, "non-negative integer"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # lineDelay
-        attr = 'lineDelay'
+        attr = "lineDelay"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str) or not attr_text.isdigit():
-                raise ValueError(data_ty_error.format(
-                    attr, 'non-negative integer'))
+                raise ValueError(data_ty_error.format(attr, "non-negative integer"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # progressLength
-        attr = 'progressLength'
+        attr = "progressLength"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
-            if (not isinstance(attr_text, str) or not attr_text.isdigit()
-                    or int(attr_text) < 1):
-                raise ValueError(data_ty_error.format(
-                    attr, 'positive integer'))
+            if (
+                not isinstance(attr_text, str)
+                or not attr_text.isdigit()
+                or int(attr_text) < 1
+            ):
+                raise ValueError(data_ty_error.format(attr, "positive integer"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # progressChar
-        attr = 'progressChar'
+        attr = "progressChar"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str):
-                raise ValueError(data_ty_error.format(attr, 'string'))
+                raise ValueError(data_ty_error.format(attr, "string"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # cursor
-        attr = 'cursor'
+        attr = "cursor"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str):
-                raise ValueError(data_ty_error.format(attr, 'string'))
+                raise ValueError(data_ty_error.format(attr, "string"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
         # noInit
-        attr = 'noInit'
+        attr = "noInit"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
-            if (not isinstance(attr_text, str)
-                    or attr_text.lower() not in ['true', 'false', '']):
-                raise ValueError(data_ty_error.format(attr, 'boolean'))
+            if not isinstance(attr_text, str) or attr_text.lower() not in [
+                "true",
+                "false",
+                "",
+            ]:
+                raise ValueError(data_ty_error.format(attr, "boolean"))
             # memorise
-            val = 'false' if attr_text.lower() == 'false' else 'true'
+            val = "false" if attr_text.lower() == "false" else "true"
             attributes[data_ty.format(attr)] = val
         # lineData
-        attr = 'lineData'
+        attr = "lineData"
         attr_text = options.get(attr, None)
         if attr_text is not None:
             # validate
             if not isinstance(attr_text, str):
-                raise ValueError(data_ty_error.format(
-                    attr, 'string (Object[])'))
+                raise ValueError(data_ty_error.format(attr, "string (Object[])"))
             # memorise
             attributes[data_ty.format(attr)] = attr_text
 
         # if the content is given explicitly, use it instead of loading a file
         if self.content:
-            contents = '\n'.join(self.content)
+            contents = "\n".join(self.content)
         else:
             localised_directory = sphinx_term.localise_term_directory(
                 env.srcdir,
                 st_term_dir,
-                ('sphinx_term_termynal_dir', 'termynal box content'))
+                ("sphinx_term_termynal_dir", "termynal box content"),
+            )
             # compose the full path to the code file and ensure it exists
             path_localised = os.path.join(localised_directory, term_filename)
             # path_original = os.path.join(st_term_dir, term_filename)
@@ -322,26 +328,26 @@ class Termynal(Directive):
             env.note_dependency(path_localised)
 
             # read in the terminal file
-            with open(path_localised, 'r') as f:
-                contents = f.read().strip('\n')
+            with open(path_localised, "r") as f:
+                contents = f.read().strip("\n")
 
         # read the yaml content
         try:
             contents_yaml = yaml.safe_load(contents)  # or {}
         except (yaml.parser.ParserError, yaml.scanner.ScannerError) as e:
-            raise ValueError('Invalid termynal content YAML format: ', str(e))
+            raise ValueError("Invalid termynal content YAML format: ", str(e))
 
         # create a termynal node
         box = termynal_box(label=term_filename_id, **attributes)
         # assign label and id (`ids=[nodes.make_id(term_filename_id)]`)
-        self.options['name'] = term_filename_id
+        self.options["name"] = term_filename_id
         self.add_name(box)
 
         # validate, process and embed each termynal line
         for line in contents_yaml:
             if line is None:
                 line = {}
-                line_value = ''
+                line_value = ""
             elif isinstance(line, str):
                 line_value = line
                 line = {}
@@ -350,16 +356,16 @@ class Termynal(Directive):
                 validate_termynal_line(line)
 
                 # process
-                if line.get('type', None) is None:
-                    line['type'] = ''
+                if line.get("type", None) is None:
+                    line["type"] = ""
 
-                if 'value' in line:
-                    line_value = line.get('value', '')
-                    del line['value']
+                if "value" in line:
+                    line_value = line.get("value", "")
+                    del line["value"]
                 else:
-                    line_value = ''
+                    line_value = ""
             else:
-                assert False, 'Unknown termynal line type.'
+                assert False, "Unknown termynal line type."
 
             # embed
             line_node = termynal_line(line_value.strip(), line_value, **line)
@@ -370,63 +376,75 @@ class Termynal(Directive):
 
 def validate_termynal_line(line):
     """Validates a yaml termynal line (dictionary within the contents list)."""
-    bad = set(line.keys()).difference(TERMYNAL_LINE_ATTRS + ['type', 'value'])
+    bad = set(line.keys()).difference(TERMYNAL_LINE_ATTRS + ["type", "value"])
     if bad:
-        raise ValueError('The following termynal line keys are '
-                         'invalid: {}.'.format(bad))
+        raise ValueError(
+            "The following termynal line keys are " "invalid: {}.".format(bad)
+        )
 
     # value
-    line_value = line.get('value', None)
+    line_value = line.get("value", None)
     if line_value is not None and not isinstance(line_value, str):
-        raise ValueError('Line value (*value* key for a line of termynal '
-                         'directive) must be a string or not specified.'
-                         '\n\n{}'.format(line_value))
+        raise ValueError(
+            "Line value (*value* key for a line of termynal "
+            "directive) must be a string or not specified."
+            "\n\n{}".format(line_value)
+        )
     # type
-    line_type = line.get('type', None)
-    if line_type not in (None, '', 'input', 'progress'):
-        raise ValueError('Line type (*type* key for a line of '
-                         'termynal directive) must be one of '
-                         '*input*, *progress* or not specified.'
-                         '\n\n{}'.format(line_type))
+    line_type = line.get("type", None)
+    if line_type not in (None, "", "input", "progress"):
+        raise ValueError(
+            "Line type (*type* key for a line of "
+            "termynal directive) must be one of "
+            "*input*, *progress* or not specified."
+            "\n\n{}".format(line_type)
+        )
     # prompt
-    line_prompt = line.get('prompt', None)
+    line_prompt = line.get("prompt", None)
     if line_prompt is not None:
         if not isinstance(line_prompt, str):
-            raise ValueError('Prompt specifier (*prompt* key for a line '
-                             'of termynal directive) must be a string.'
-                             '\n\n{}'.format(line_prompt))
+            raise ValueError(
+                "Prompt specifier (*prompt* key for a line "
+                "of termynal directive) must be a string."
+                "\n\n{}".format(line_prompt)
+            )
     # progressPercent
-    line_progress = line.get('progressPercent', None)
+    line_progress = line.get("progressPercent", None)
     if line_progress is not None:
         if not isinstance(line_progress, int) or line_progress < 0:
             raise ValueError(
-                'Prompt percentage (*progressPercent* key for a '
-                'line of termynal directive) '
-                'must be a non-negative integer.'
-                '\n\n{}'.format(line_progress))
+                "Prompt percentage (*progressPercent* key for a "
+                "line of termynal directive) "
+                "must be a non-negative integer."
+                "\n\n{}".format(line_progress)
+            )
     # progressChar
-    line_progresschar = line.get('progressChar', None)
+    line_progresschar = line.get("progressChar", None)
     if line_progresschar is not None:
         if not isinstance(line_progresschar, str):
-            raise ValueError('Progress cursor (*progressChar* key for a '
-                             'line of termynal directive) must be a string.'
-                             '\n\n{}'.format(line_progresschar))
-    # typeDelay
-    line_typedelay = line.get('typeDelay', None)
-    if line_typedelay is not None:
-        if (not isinstance(line_typedelay, int)
-                or line_typedelay < 0):
             raise ValueError(
-                'Typing delay (*typeDelay* key for a line of '
-                'termynal directive) must be a non-negative integer.'
-                '\n\n{}'.format(line_typedelay))
+                "Progress cursor (*progressChar* key for a "
+                "line of termynal directive) must be a string."
+                "\n\n{}".format(line_progresschar)
+            )
+    # typeDelay
+    line_typedelay = line.get("typeDelay", None)
+    if line_typedelay is not None:
+        if not isinstance(line_typedelay, int) or line_typedelay < 0:
+            raise ValueError(
+                "Typing delay (*typeDelay* key for a line of "
+                "termynal directive) must be a non-negative integer."
+                "\n\n{}".format(line_typedelay)
+            )
     # cursor
-    line_cursor = line.get('cursor', None)
+    line_cursor = line.get("cursor", None)
     if line_cursor is not None:
         if not isinstance(line_cursor, str):
-            raise ValueError('Prompt cursor (*cursor* key for a line of '
-                             'termynal directive) must be a string.'
-                             '\n\n{}'.format(line_cursor))
+            raise ValueError(
+                "Prompt cursor (*cursor* key for a line of "
+                "termynal directive) must be a string."
+                "\n\n{}".format(line_cursor)
+            )
 
 
 def validate_termynal_lines(app, doctree, docname):
@@ -446,8 +464,9 @@ def validate_termynal_lines(app, doctree, docname):
 
     for line in termynal_lines:
         if not isinstance(line.parent, termynal_box):
-            raise Exception('Each termynal line must be embedded '
-                            'within a termynal box.')
+            raise Exception(
+                "Each termynal line must be embedded " "within a termynal box."
+            )
 
 
 def inject_termynal_init(app, doctree, docname):
@@ -469,23 +488,23 @@ def inject_termynal_init(app, doctree, docname):
     # get termynal box ids
     termynal_ids = []
     for box in termynal_boxes:
-        ids = box.attributes['ids']
-        ids = [i for i in ids if i.startswith('termynal-')]
-        assert len(ids) == 1, 'Only one id is expected'
-        termynal_ids.append('#{}'.format(ids[0]))
-    assert termynal_ids, 'With termynal boxes available, ids cannot be empty'
+        ids = box.attributes["ids"]
+        ids = [i for i in ids if i.startswith("termynal-")]
+        assert len(ids) == 1, "Only one id is expected"
+        termynal_ids.append("#{}".format(ids[0]))
+    assert termynal_ids, "With termynal boxes available, ids cannot be empty"
 
-    rel_root = os.path.relpath('.', os.path.dirname(docname))  # app.outdir
-    rel_termynal = os.path.join(rel_root, '_static', 'termynal.js')
+    rel_root = os.path.relpath(".", os.path.dirname(docname))  # app.outdir
+    rel_termynal = os.path.join(rel_root, "_static", "termynal.js")
 
-    termynal_function = ('\n\n'
-                         '    <script src="{}" '
-                         'data-termynal-container="{}">'
-                         '</script>\n'.format(rel_termynal,
-                                              '|'.join(termynal_ids)))
+    termynal_function = (
+        "\n\n"
+        '    <script src="{}" '
+        'data-termynal-container="{}">'
+        "</script>\n".format(rel_termynal, "|".join(termynal_ids))
+    )
     # `format='html'` is crucial to avoid escaping html characters
-    script_node = nodes.raw(
-        termynal_function, termynal_function, format='html')
+    script_node = nodes.raw(termynal_function, termynal_function, format="html")
     # add the call node to the document
     doctree.append(script_node)
 
@@ -496,23 +515,24 @@ def assign_reference_title(app, document):
     termynal boxes.
     """
     # get the standard domain
-    domain = app.env.get_domain('std')
+    domain = app.env.get_domain("std")
 
     # go through every termynal box
     for node in document.traverse(termynal_box):
         # every termynal box must have exactly one name starting with
         # 'termynal:'
-        assert node['names']
-        assert len(node['names']) == 1
-        node_name = node['names'][0]
+        assert node["names"]
+        assert len(node["names"]) == 1
+        node_name = node["names"][0]
 
-        assert node_name.startswith('termynal:'), (
-            'termynal box ids must start with termynal:')
+        assert node_name.startswith(
+            "termynal:"
+        ), "termynal box ids must start with termynal:"
         refname = REFNAME
 
         # every termynal box has a single id
-        assert len(node['ids']) == 1
-        node_id = node['ids'][0]
+        assert len(node["ids"]) == 1
+        node_id = node["ids"][0]
 
         # get the document name
         docname = app.env.docname
@@ -535,6 +555,7 @@ def include_static_files(app):
     (Attached to the `builder-inited` Sphinx event.)
     """
     for file_name in STATIC_FILES:
+        print(f"[DEBUG] Including static file: {file_name}")
         file_path = sphinx_term.get_static_path(file_name)
         if file_path not in app.config.html_static_path:
             app.config.html_static_path.append(file_path)
@@ -545,6 +566,8 @@ def load_static_files(app, pagename, templatename, context, doctree):
     # only go through non-empty documents
     if doctree is None:
         return
+
+    print(context)
 
     # get termynal boxes
     termynal_boxes = doctree.traverse(termynal_box)
@@ -560,12 +583,15 @@ def load_static_files(app, pagename, templatename, context, doctree):
     for js_file in STATIC_JS_FILES:
         _js_file = os.path.basename(js_file)
         # skip termynal*.js, it's handled by the inject_termynal_init function
-        if not (sphinx_term.is_js_registered(app, _js_file)
-                or _js_file.startswith('termynal')):
+        if not (
+            sphinx_term.is_js_registered(app, _js_file)
+            or _js_file.startswith("termynal")
+        ):
             app.add_js_file(_js_file)
 
     # add external dependencies
-    script_files = [os.path.basename(i) for i in context['script_files']]
+    print(f"[DEBUG] script_files: {context['script_files']}")
+    script_files = [os.path.basename(str(i)) for i in context["script_files"]]
     for stub, path in DEPENDENCIES.items():
         if sphinx_term.is_js_registered(app, path) or stub in script_files:
             continue
@@ -581,32 +607,32 @@ def setup(app):
     Sets up the Sphinx extension for the `termynal` directive.
     """
     # register two Sphinx config values used for the extension
-    app.add_config_value('sphinx_term_termynal_dir', None, 'env')
+    app.add_config_value("sphinx_term_termynal_dir", None, "env")
 
     # register the custom docutils nodes with Sphinx
     app.add_node(
         termynal_box,
         html=(visit_termynal_box_node, depart_termynal_box_node),
         latex=(visit_termynal_box_node_, depart_termynal_box_node_),
-        text=(visit_termynal_box_node_, depart_termynal_box_node_)
+        text=(visit_termynal_box_node_, depart_termynal_box_node_),
     )
     app.add_node(
         termynal_line,
         html=(visit_termynal_line_node, depart_termynal_line_node),
         latex=(visit_termynal_line_node_, depart_termynal_line_node_),
-        text=(visit_termynal_line_node_, depart_termynal_line_node_)
+        text=(visit_termynal_line_node_, depart_termynal_line_node_),
     )
 
     # register the custom role and directives with Sphinx
-    app.add_directive('termynal', Termynal)
+    app.add_directive("termynal", Termynal)
 
     # connect custom hooks to the Sphinx build process
-    app.connect('doctree-read', assign_reference_title)
-    app.connect('doctree-resolved', inject_termynal_init)
-    app.connect('doctree-resolved', validate_termynal_lines)
+    app.connect("doctree-read", assign_reference_title)
+    app.connect("doctree-resolved", inject_termynal_init)
+    app.connect("doctree-resolved", validate_termynal_lines)
     # ...ensure the required static files are **copied** into the build
-    app.connect('builder-inited', include_static_files)
+    app.connect("builder-inited", include_static_files)
     # ...ensure that relevant html output pages **load** the static files
-    app.connect('html-page-context', load_static_files)
+    app.connect("html-page-context", load_static_files)
 
-    return {'version': sphinx_term.VERSION}
+    return {"version": sphinx_term.VERSION}

@@ -9,30 +9,32 @@ This extension is compatible with, and intended for, Jupyter Book.
 
 import os
 
-VERSION = '0.1'
+VERSION = "0.1"
 __version__ = VERSION
 
-_STATIC_PATH = os.path.join(os.path.dirname(__file__), '_static')
+_STATIC_PATH = os.path.join(os.path.dirname(__file__), "_static")
 
 
-def file_exists(file_path, file_type='code'):
+def file_exists(file_path, file_type="code"):
     """Checks whether a path exists and is a file."""
     if os.path.exists(file_path):
         if not os.path.isfile(file_path):
-            raise RuntimeError('The {} file ({}) is not a '
-                               'file.'.format(file_type, file_path))
+            raise RuntimeError(
+                "The {} file ({}) is not a " "file.".format(file_type, file_path)
+            )
     else:
-        raise RuntimeError('The {} file ({}) does not '
-                           'exist.'.format(file_type, file_path))
+        raise RuntimeError(
+            "The {} file ({}) does not " "exist.".format(file_type, file_path)
+        )
 
 
 def get_static_path(filename):
     """Returns a full path to a static extension file."""
     file_path = os.path.join(_STATIC_PATH, filename)
+    print(f"[DEBUG] Getting static path: {file_path}")
     # file_exists(file_path, file_type='static')
     if not os.path.exists(file_path):
-        raise RuntimeError('The static path ({}) does not '
-                           'exist.'.format(file_path))
+        raise RuntimeError("The static path ({}) does not " "exist.".format(file_path))
     return file_path
 
 
@@ -94,17 +96,20 @@ def include_static_path(app):
 def localise_term_directory(src_dir, st_term_dir, request_type):
     """Localise the terminal directory path."""
     if st_term_dir is None:
-        raise RuntimeError('The {} sphinx config value must be set when '
-                           'loading {} from a file.'.format(*request_type))
+        raise RuntimeError(
+            "The {} sphinx config value must be set when "
+            "loading {} from a file.".format(*request_type)
+        )
     # localise the directory if given as an absolute path
-    if st_term_dir.startswith('/'):
-        localised_directory = '.' + st_term_dir
+    if st_term_dir.startswith("/"):
+        localised_directory = "." + st_term_dir
     else:
         localised_directory = st_term_dir
     # place it in the Sphinx root
     localised_directory = os.path.join(src_dir, localised_directory)
     # check whether the directory exists
     if not os.path.exists(localised_directory):
-        raise RuntimeError('The {} ({}) does not exist.'.format(
-            request_type[0], localised_directory))
+        raise RuntimeError(
+            "The {} ({}) does not exist.".format(request_type[0], localised_directory)
+        )
     return localised_directory
