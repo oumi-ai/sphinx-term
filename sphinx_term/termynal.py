@@ -555,7 +555,6 @@ def include_static_files(app):
     (Attached to the `builder-inited` Sphinx event.)
     """
     for file_name in STATIC_FILES:
-        print(f"[DEBUG] Including static file: {file_name}")
         file_path = sphinx_term.get_static_path(file_name)
         if file_path not in app.config.html_static_path:
             app.config.html_static_path.append(file_path)
@@ -566,8 +565,6 @@ def load_static_files(app, pagename, templatename, context, doctree):
     # only go through non-empty documents
     if doctree is None:
         return
-
-    print(context)
 
     # get termynal boxes
     termynal_boxes = doctree.traverse(termynal_box)
@@ -590,7 +587,6 @@ def load_static_files(app, pagename, templatename, context, doctree):
             app.add_js_file(_js_file)
 
     # add external dependencies
-    print(f"[DEBUG] script_files: {context['script_files']}")
     script_files = [os.path.basename(str(i)) for i in context["script_files"]]
     for stub, path in DEPENDENCIES.items():
         if sphinx_term.is_js_registered(app, path) or stub in script_files:
